@@ -1,0 +1,93 @@
+# -*- coding: utf-8 -*-
+import scrapy
+import logging
+from googlescholar.items import GooglescholarItem
+import urllib, socket, time, random
+
+class GoogleauthorSpider(scrapy.Spider):
+	name = 'googleauthor'
+	allowed_domains = ['scholar.google.com']
+	#start_urls = ['https://scholar.google.com/citations?&user=jplQac8AAAAJ']
+	start_urls = ['https://scholar.google.com/citations?view_op=search_authors&mauthors=machine+learning']
+	# custom_settings = {
+	# 	'DEPTH_LIMIT': 2
+	# }
+	
+	# parse is function to extract and parsed data
+	def parse(self, response):
+		#for author_sel in response.xpath('//div[@class="gsc_1usr"]'):
+		link = response.xpath(".//h3[@class='gs_ai_name']/a/@href").extract_first()
+		url = response.urljoin(link)
+		yield scrapy.Request(url+'&cstart=0&pagesize=100',callback=self.parse_profile_content)
+			
+	def parse_profile_content(self,response):
+		if response.status == 200:
+			loop=0
+			
+			url = response.url
+			item = GooglescholarItem()
+			# item['name'] = response.xpath("//div[@id='gsc_prf_in']/text()").extract_first()
+			# item['email']= response.xpath("//div[@id='gsc_prf_ivh']/text()").extract_first()
+			# if response.xpath("//div[@class='gsc_prf_il']/text()[1]").extract_first() != "":
+			# 	position1 = response.xpath("//div[@class='gsc_prf_il']/text()[1]").extract_first()
+			# 	position2 = response.xpath("//div[@class='gsc_prf_il']/a/text()").extract_first()
+			# 	position3 = response.xpath("//div[@class='gsc_prf_il']/text()[2]").extract_first()
+			# 	positions = str(position1)+' '+str(position2)+' '+str(position3)
+			# item['position']=positions
+			# item['tags']= response.xpath("//div[@id='gsc_prf_int']/a/text()").extract()
+			# publication_data = response.xpath("//tr/td[@class='gsc_rsb_std']/text()").extract()
+			# item['citation']= publication_data[0]
+			# item['citation_2014']= publication_data[1]
+			# item['hindex']= publication_data[2]
+			# item['hindex_2014']= publication_data[3]
+			# item['iindex']= publication_data[4]
+			# item['iindex_2014']= publication_data[5]
+			tmp = response.xpath('//tbody[@id="gsc_a_b"]/tr[@class="gsc_a_tr"]/td[@class="gsc_a_t"]/a/text()').extract()
+			item['pubs'] = []
+			n = len(tmp)
+			logging.info("Total titles",n)
+			for i in range(1,n+1): 
+				#loop=loop+1
+				pub = {}
+				pub['title'] = \
+					response.xpath('//tbody[@id="gsc_a_b"]/tr[@class="gsc_a_tr"][%d]/td[@class="gsc_a_t"]/a/text()' % i).extract()
+				
+				# pub['author'] = \
+				# 	response.xpath('//tbody[@id="gsc_a_b"]/tr[@class="gsc_a_tr"][%d]/td[@class="gsc_a_t"]/div[1]/text()' % i).extract()
+				# pub['venue'] = \
+				# 	response.xpath('//tbody[@id="gsc_a_b"]/tr[@class="gsc_a_tr"][%d]/td[@class="gsc_a_t"]/div[2]/text()' % i).extract()
+				# pub['citation'] = \
+				# 	response.xpath('//tbody[@id="gsc_a_b"]/tr[@class="gsc_a_tr"][%d]/td[@class="gsc_a_c"]/a/text()' % i).extract()
+				# pub['year'] = \
+				# 	response.xpath('//tbody[@id="gsc_a_b"]/tr[@class="gsc_a_tr"][%d]/td[@class="gsc_a_y"]/span/text()' % i).extract()
+				item['pubs'].append(pub)
+				#total=len(pub['title'])
+				#logging.info('total==',total)
+				logging.info('if kay under aya')
+				offset = 0; d = 0
+				idx = url.find('cstart=')
+				idx += 7
+				while url[idx].isdigit():
+					offset = offset*10 + int(url[idx])
+					idx += 1
+					d += 1
+				logging.info('yeh chala')
+				yield scrapy.Request(url[:idx-d] + str(offset+100) + '&pagesize=100', self.parse_profile_content)
+
+			yield item
+			
+			# if n == 100:
+			# 	logging.info('if kay under aya')
+			# 	offset = 0; d = 0
+			# 	idx = url.find('cstart=')
+			# 	idx += 7
+			# 	while url[idx].isdigit():
+			# 		offset = offset*10 + int(url[idx])
+			# 		idx += 1
+			# 		d += 1
+			# 	logging.info('yeh chala')
+			# 	yield scrapy.Request(url[:idx-d] + str(offset+100) + '&pagesize=100', self.parse_profile_content)
+				
+		#yield scrapy.Request(response.url+'&cstart=0&pagesize=100',callback=self.publication_content)
+		
+		

@@ -1,0 +1,39 @@
+Artificial Intelligence
+Human-Computer Interaction
+data mining
+database systems
+Distributed Computing
+Cloud computing
+Grid computing
+Augmented Reality
+Virtual Reality
+Computer Graphics
+Network Security
+Cybersecurity
+Software Engineering
+Software Testing
+Software Security
+Computer Vision
+Bioinformatics
+Information Retrieval
+Big Data
+Blockchain
+Cryptography
+Image Processing
+Computer Architecture
+Medical Image Analysis
+Natural Language Processing
+Robotics
+pattern recognition
+formal methods
+graph theory
+Probability
+physics
+Text Mining
+Big Data Analytics
+Intelligent Systems
+Automation
+Operating System
+ecommerce
+information retrieval
+Semantic Web
