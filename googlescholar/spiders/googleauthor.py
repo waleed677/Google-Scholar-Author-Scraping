@@ -66,7 +66,7 @@ class GoogleauthorSpider(scrapy.Spider):
 	def parse_profile_content(self,response):
 		items=[]
 		url = response.url
-		idx = url.find("user")
+		#idx = url.find("user")
 
 		
 		total_articles = response.meta.get("total_articles", 0)
