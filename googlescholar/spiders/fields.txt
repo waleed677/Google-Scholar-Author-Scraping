@@ -1,5 +1,5 @@
-Computer Vision
-Bioinformatics
-Information Retrieval
-Big Data
-Blockchain
+Electronics
+wireless communication
+internet of things
+smart cities
+geosciences
