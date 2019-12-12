@@ -49,7 +49,7 @@ class GoogleauthorSpider(scrapy.Spider):
 		join_url = "&"+after_author+"&"+start
 		#url = "https://scholar.google.com/citations?view_op=search_authors&mauthors=machine+learning"+join_url
 		url = response.url+join_url
-		logging.info("chala e bawa jee %s",url)
+		logging.info("Url %s",url)
 		if start is not None:
 			yield scrapy.Request(url)
 		

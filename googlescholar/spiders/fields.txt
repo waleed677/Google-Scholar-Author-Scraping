@@ -1,5 +1,1 @@
-Electronics
-wireless communication
-internet of things
-smart cities
-geosciences
+machine learning
